@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from sources import common  # noqa: E402
+from sources import common, textextract  # noqa: E402
 
 
 def slugify(s: str, maxlen: int = 60) -> str:
@@ -74,6 +74,37 @@ def fetch_pdf(item: dict, dest: Path) -> tuple[Path, int] | None:
     return path, len(data)
 
 
+def fetch_paper_light(item: dict, dest: Path) -> tuple[Path, int] | None:
+    """Light mode: extract text deterministically, store as Markdown."""
+    text, method = textextract.extract(item)
+    doc = textextract.to_markdown_doc(item, text, method)
+    sub = dest / "papers" / slugify(item.get("query", "misc"))
+    sub.mkdir(parents=True, exist_ok=True)
+    year = item.get("year") or "nd"
+    path = sub / f"{year}-{slugify(item['title'])}.md"
+    path.write_text(doc)
+    common.warn(f"  extracted via {method} ({len(doc) // 1024} KB)")
+    item["extraction"] = method
+    return path, len(doc.encode())
+
+
+def fetch_repo_light(item: dict, dest: Path) -> tuple[Path, int] | None:
+    """Light mode: fetch only the repo README instead of cloning."""
+    url = f"https://api.github.com/repos/{item['title']}/readme"
+    try:
+        data = common.http_get(url, headers={"Accept": "application/vnd.github.raw+json"})
+    except Exception as e:
+        common.warn(f"  README fetch failed: {e}")
+        return None
+    sub = dest / "repos"
+    sub.mkdir(parents=True, exist_ok=True)
+    path = sub / f"{slugify(item['title'])}-README.md"
+    header = (f"---\nrepo: {item['url']}\nstars: {item.get('citations')}\n"
+              f"note: light mode — README only; clone the repo for code\n---\n\n")
+    path.write_text(header + data.decode("utf-8", "replace"))
+    return path, len(data) + len(header)
+
+
 def fetch_repo(item: dict, dest: Path) -> tuple[Path, int] | None:
     sub = dest / "repos"
     sub.mkdir(parents=True, exist_ok=True)
@@ -103,6 +134,10 @@ def main():
     ap.add_argument("--min-score", type=float, default=None)
     ap.add_argument("--hf-download", action="store_true",
                     help="actually download HF models/datasets (can be huge)")
+    ap.add_argument("--light", action="store_true",
+                    help="light mode: store extracted text as MD instead of "
+                         "PDFs, repo READMEs instead of clones (10-50x smaller, "
+                         "faster for agents to read)")
     args = ap.parse_args()
 
     dest = Path(args.dest).expanduser()
@@ -132,9 +167,10 @@ def main():
         common.warn(f"fetching {item['id']}: {item['title'][:70]}")
         result = None
         if item.get("clone_url"):
-            result = fetch_repo(item, dest)
-        elif item.get("pdf_url"):
-            result = fetch_pdf(item, dest)
+            result = (fetch_repo_light if args.light else fetch_repo)(item, dest)
+        elif item.get("type") == "paper":
+            result = (fetch_paper_light(item, dest) if args.light
+                      else fetch_pdf(item, dest))
         elif item["source"] == "huggingface":
             if args.hf_download:
                 common.warn("  --hf-download not implemented for weights; recording link")

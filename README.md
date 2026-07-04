@@ -49,6 +49,22 @@ Searches measure their own **saturation**: if a topic is exhausted early,
 the run stops below budget; if it isn't, the agent tells you a higher
 effort would find substantially more.
 
+## Full vs. Light version
+
+Two storage modes, same skill, same search — chosen in the intake (or say
+"light" in your request):
+
+| | `full` (default) | `light` (`--light`) |
+|---|---|---|
+| Papers | original PDFs | verbatim text as Markdown (frontmatter: source, extraction method) |
+| Repos | shallow clone | README only |
+| Size | GBs | **10–50x smaller** (a whole research run in a few MB) |
+| Best for | archival, exact figures/formulas | tight disk space, **agent brains** — agents read MD/TXT much faster than PDFs |
+
+Light-mode extraction is deterministic code, never the LLM retyping text:
+arXiv HTML rendering → `pdftotext` (if installed) → abstract-only fallback,
+with the method recorded in every file so you know what you have.
+
 ## Anti-hallucination by construction
 
 - The **scripts** search and download (live API results); the **agent**

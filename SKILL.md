@@ -36,6 +36,11 @@ is still missing:
 3. **Time filter** — all time / last 2 years / custom `--since`
 4. **Source types** — papers / repos / models+datasets (multi-select,
    default: all)
+5. **Storage mode** — `full` (original PDFs + repo clones, default) or
+   `light` (extracted text as Markdown + repo READMEs only; 10–50x
+   smaller, faster for agent brains). If the user says "light", mentions
+   disk space, or wants MD/TXT for an agent brain, pick light without
+   asking.
 
 | Effort | Duration guide | Rounds | Expansion | Volume guide |
 |---|---|---|---|---|
@@ -104,8 +109,15 @@ off-topic/unreliable — quantity is not a reason to cut.
 python3 SKILL_DIR/scripts/fetch.py \
   --in <dest>/.sdr/round<N>.json --dest <dest> \
   --max-mb <volume budget> \
-  [--top N | --ids id1,id2 | --all] [--min-score X]
+  [--top N | --ids id1,id2 | --all] [--min-score X] [--light]
 ```
+
+**Light mode (`--light`):** papers are stored as Markdown with the text
+extracted deterministically by `textextract.py` (arXiv HTML → pdftotext →
+abstract-only fallback, method recorded in the file's frontmatter); repos
+as README-only. NEVER extract or retype paper content yourself — only the
+script's verbatim extraction keeps the anti-hallucination guarantee.
+Volume guides shrink accordingly (light rarely exceeds a few MB).
 
 Volume is enforced cumulatively across all fetch calls. HF models/datasets
 are recorded as links only (weights are huge). Failed downloads are fine —
