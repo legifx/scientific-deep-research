@@ -1,4 +1,30 @@
+# --- Secrets & local config (NEVER commit) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+secrets/
+
+# --- Temp / cache ---
 __pycache__/
 *.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# --- Runtime artifacts ---
 .sdr/
 research/
+*.db
+logs/
+*.log
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
