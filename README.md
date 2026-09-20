@@ -80,27 +80,26 @@ Dieselben Szenarien, vorher und nachher. Query: `long context attention`.
 
 ## Ablauf
 
+<details>
+<summary>Prüfpunkte der Pipeline (Diagramm)</summary>
+
 ```mermaid
-flowchart TD
-    A["Thema + Intake"] --> B["search.py: Suche über<br/>arXiv · OpenAlex · GitHub · HF"]
-    B --> C{"Relevanz-Untergrenze<br/>(C01)"}
-    C -->|"kein Treffer"| X["aborted: true<br/>keine Bibliothek (C09)"]
-    C -->|"Treffer"| D["Merge über Dedupe-Schlüssel (C07)"]
-    D --> E{"Quellen widersprechen?<br/>Abstract-Jaccard < 0,50 (C02)"}
-    E -->|ja| F["conflict: true<br/>beide Varianten bleiben"]
-    E -->|nein| G["Score: Relevanz + Impact<br/>+ Frische + Bonus"]
-    F --> G
-    G --> H["fetch.py: Größen-Prüfung vorab (C04)"]
-    H --> I{"Download möglich?"}
-    I -->|"403 / kein PDF"| J["status: link_only<br/>+ failure_reason (C05)"]
-    I -->|ok| K{"Titel-Abdeckung<br/>&lt; 0,70? (C12)"}
-    K -->|ja| L["status: pdf_unverified"]
-    K -->|nein| M["status: downloaded"]
-    J --> N["manifest.py"]
-    L --> N
-    M --> N
-    N --> O["INDEX.md + manifest.json<br/>schema_version 2 + report"]
+flowchart LR
+    S["Suche<br/>arXiv · OpenAlex<br/>GitHub · HF"] --> R{"Relevanz-<br/>Untergrenze C01"}
+    R -->|"nichts Relevantes"| X["Abbruch C09"]
+    R --> M["Dedupe C07 +<br/>Quellenabgleich C02"]
+    M --> P{"Größe<br/>vorab C04"}
+    P -->|"zu groß"| K["übersprungen"]
+    P --> D["Download +<br/>Titelprüfung C12"]
+    D --> F["manifest.json<br/>INDEX.md"]
 ```
+
+</details>
+
+In Worten: Suchen, Relevanz prüfen, Dubletten zusammenführen und
+Quellenwidersprüche markieren, Größe vor dem Laden prüfen, danach Inhalt
+gegen den Titel verifizieren — dann Manifest schreiben. Fehlgeschlagene
+Downloads landen als `link_only` im Manifest (C05).
 
 ---
 
