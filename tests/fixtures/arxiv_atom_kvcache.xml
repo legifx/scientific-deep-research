@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/9lEEk5mlw4xuLDIkfbVKiJ/pAhw</id>
+  <title>arXiv Query: search_query=all:kv OR all:cache OR all:eviction&amp;id_list=&amp;start=0&amp;max_results=6</title>
+  <updated>2026-09-20T16:07:34Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:kv+OR+(all:cache+OR+all:eviction)&amp;start=0&amp;max_results=6&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>6</opensearch:itemsPerPage>
+  <opensearch:totalResults>10006</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2605.09649v1</id>
+    <title>Make Each Token Count: Towards Improving Long-Context Performance with KV Cache Eviction</title>
+    <updated>2026-05-10T16:47:50Z</updated>
+    <link href="https://arxiv.org/abs/2605.09649v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.09649v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The key-value (KV) cache is a major bottleneck in long-context inference, where memory and computation grow with sequence length. Existing KV eviction methods reduce this cost but typically degrade performance relative to full-cache inference. Our key insight is that full-cache attention is not always optimal: in long contexts, irrelevant tokens can dilute attention away from useful evidence, so selective, learnable eviction can improve generation rather than merely approximate the full cache. We introduce a global retention-based KV eviction method that learns each token's future utility under a unified memory budget. Lightweight retention gates assign utility scores to cached KV entries, and a shared final scoring projection calibrates these scores across all layers and heads. This enables a single global eviction policy in which tokens from different layers, heads, and modalities compete directly for cache capacity. We further provide theoretical analysis showing that preferentially retaining useful tokens reduces attention dilution, and we justify geometric retention as a query-agnostic proxy for future utility. Across diverse long-context language and vision-language reasoning, and multi-turn dialogue benchmarks, our method substantially reduces KV memory while matching or surpassing full-cache inference. These results suggest that learned, globally calibrated KV eviction is not only a compression technique, but also a mechanism for improving long-context reasoning.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-10T16:47:50Z</published>
+    <arxiv:comment>A learnable KV eviction method for large language models</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ngoc Bui</name>
+    </author>
+    <author>
+      <name>Hieu Trung Nguyen</name>
+    </author>
+    <author>
+      <name>Arman Cohan</name>
+    </author>
+    <author>
+      <name>Rex Ying</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.08840v1</id>
+    <title>ReST-KV: Robust KV Cache Eviction with Layer-wise Output Reconstruction and Spatial-Temporal Smoothing</title>
+    <updated>2026-05-09T09:49:32Z</updated>
+    <link href="https://arxiv.org/abs/2605.08840v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.08840v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) face growing challenges in efficient generative inference due to the increasing memory demands of Key-Value (KV) caches, especially for long sequences. Existing eviction methods typically retain KV pairs with high attention weights but overlook the impact of attention redistribution caused by token removal, as well as the spatial-temporal dynamics in KV selection. In this paper, we propose ReST-KV, a robust KV eviction method that combines layer-wise output Reconstruction and Spatial-Temporal smoothing to provide a more comprehensive perspective for the KV cache eviction task. Specifically, ReST-KV formulates KV cache eviction as an optimization problem that minimizes output discrepancies through efficient layer-wise reconstruction. By directly modeling how each token's removal affects the model output, our method naturally captures attention redistribution effects, going beyond simplistic reliance on raw attention weights. To further enhance robustness, we design exponential moving average smoothing to handle temporal variations and an adaptive window-based mechanism to capture spatial patterns. Our method, ReST-KV, significantly advances performance on long-context benchmarks. It surpasses state-of-the-art baselines by 2.58% on LongBench and 15.2% on RULER. Additionally, ReST-KV consistently outperforms existing methods on Needle-in-a-Haystack and InfiniteBench, all while achieving a remarkable 10.61$\times$ reduction in decoding latency at 128k context length. The code is publicly available at https://github.com/an-yongqi/rest-kv to facilitate reproducibility and further research.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-09T09:49:32Z</published>
+    <arxiv:comment>Accepted at ICLR 2026. Project Page: https://github.com/an-yongqi/rest-kv</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yongqi An</name>
+    </author>
+    <author>
+      <name>Chang Lu</name>
+    </author>
+    <author>
+      <name>Kuan Zhu</name>
+    </author>
+    <author>
+      <name>Tao Yu</name>
+    </author>
+    <author>
+      <name>Chaoyang Zhao</name>
+    </author>
+    <author>
+      <name>Hong Wu</name>
+    </author>
+    <author>
+      <name>Ming Tang</name>
+    </author>
+    <author>
+      <name>Jinqiao Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.12485v1</id>
+    <title>Cold-RL: Learning Cache Eviction with Offline Reinforcement Learning for NGINX</title>
+    <updated>2025-08-17T20:01:12Z</updated>
+    <link href="https://arxiv.org/abs/2508.12485v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.12485v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Web proxies such as NGINX commonly rely on least-recently-used (LRU) eviction, which is size agnostic and can thrash under periodic bursts and mixed object sizes. We introduce Cold-RL, a learned eviction policy for NGINX that replaces LRU's forced-expire path with a dueling Deep Q-Network served by an ONNX sidecar within a strict microsecond budget. On each eviction, Cold-RL samples the K least-recently-used objects, extracts six lightweight features (age, size, hit count, inter-arrival time, remaining TTL, and last origin RTT), and requests a bitmask of victims; a hard timeout of 500 microseconds triggers immediate fallback to native LRU. Policies are trained offline by replaying NGINX access logs through a cache simulator with a simple reward: a retained object earns one point if it is hit again before TTL expiry. We compare against LRU, LFU, size-based, adaptive LRU, and a hybrid baseline on two adversarial workloads. With a 25 MB cache, Cold-RL raises hit ratio from 0.1436 to 0.3538, a 146 percent improvement over the best classical baseline; at 100 MB, from 0.7530 to 0.8675, a 15 percent gain; and at 400 MB it matches classical methods (about 0.918). Inference adds less than 2 percent CPU overhead and keeps 95th percentile eviction latency within budget. To our knowledge, this is the first reinforcement learning eviction policy integrated into NGINX with strict SLOs.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-17T20:01:12Z</published>
+    <arxiv:comment>8 pages, 4 figures (system architecture, eviction path, training pipeline, and DQN algorithm), 2 tables. Code available at https://github.com/ayushgupta4897/DRL-Cache</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Aayush Gupta</name>
+    </author>
+    <author>
+      <name>Arpit Bhayani</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.03928v1</id>
+    <title>Value-Aware Stochastic KV Cache Eviction for Reasoning Models</title>
+    <updated>2026-06-02T17:16:33Z</updated>
+    <link href="https://arxiv.org/abs/2606.03928v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.03928v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reasoning models improve accuracy through extended chains of thought, but their long outputs create a memory and compute bottleneck. KV cache eviction methods reduce this cost by evicting unimportant key-value pairs from the cache, yet they often yield worse accuracy than selection-based sparse attention alternatives, which keep the full KV cache. We identify key factors crucial to KV cache eviction accuracy. First, a small fraction of value states have abnormally large magnitudes, and evicting them causes catastrophic failure where models enter repetitive reasoning loops. Second, introducing stochasticity during eviction improves accuracy by increasing cache diversity. Based on these findings, we propose Value-aware Stochastic KV Cache Eviction (VaSE), a training-free recipe that protects large-magnitude value states and promotes diverse eviction decisions. Across six reasoning tasks, Qwen3 models using VaSE with 4x KV cache compression yield higher average accuracies than SOTA selection method at the same sparsity, while outperforming the strongest eviction method by more than 4%. Overall, VaSE bridges the gap between efficiency and accuracy, supporting FlashAttention2 and enabling a static memory footprint for reasoning models.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-02T17:16:33Z</published>
+    <arxiv:comment>Codes: https://github.com/terarachang/VaSE</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ting-Yun Chang</name>
+    </author>
+    <author>
+      <name>Harvey Yiyun Fu</name>
+    </author>
+    <author>
+      <name>Deqing Fu</name>
+    </author>
+    <author>
+      <name>Chenghao Yang</name>
+    </author>
+    <author>
+      <name>Jesse Thomason</name>
+    </author>
+    <author>
+      <name>Robin Jia</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.28293v1</id>
+    <title>A Probabilistic Interpretation of KV Cache Eviction</title>
+    <updated>2026-08-28T12:57:07Z</updated>
+    <link href="https://arxiv.org/abs/2608.28293v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.28293v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The premise and promise of KV (cache) eviction is simple: higher throughput can be achieved by evicting some entries from the KV cache, at a negligible cost to quality. This holds empirically for many existing methods, though most rely on creative heuristics for selecting which entries to drop. Despite recent advances, the problem of KV eviction has remained informal in the literature. This paper aims to properly formalize this problem through the lens of probabilistic reasoning and reveal what can be learned from this perspective. Concretely, we (1) formalize the problem of KV eviction and, unfortunately, prove that it is computationally hard, (2) show that by framing it probabilistically, KV eviction reduces to the problem of expectation estimation, which can be approximated through sampling, (3) show that through this probabilistic interpretation, correcting for evicted entries during decoding---a previously ignored problem---becomes feasible, and (4) reveal that existing methods in the literature are zero-variance biased estimators that can be easily adapted in order to enable decode time correction. In practice, we show that this probabilistic version of KV eviction coupled with decode time correction is more robust to different tasks compared to existing eviction methods and achieves competitive performance at the same compression budget.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-28T12:57:07Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Renato Geh</name>
+    </author>
+    <author>
+      <name>Alex Chen</name>
+    </author>
+    <author>
+      <name>Daniel Israel</name>
+    </author>
+    <author>
+      <name>Aditya Grover</name>
+    </author>
+    <author>
+      <name>Guy Van den Broeck</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.24971v1</id>
+    <title>PolyKV: A Shared Asymmetrically-Compressed KV Cache Pool for Multi-Agent LLM Inference</title>
+    <updated>2026-04-27T20:10:21Z</updated>
+    <link href="https://arxiv.org/abs/2604.24971v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.24971v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present PolyKV, a system in which multiple concurrent inference agents share a single, asymmetrically compressed KV cache pool. Rather than allocating a separate KV cache per agent -- the standard paradigm -- PolyKV writes a compressed cache once and injects it into N independent agent contexts via HuggingFace DynamicCache objects. Compression is asymmetric: Keys are quantized at int8 (q8_0) to preserve softmax stability, while Values are compressed using TurboQuant MSE -- a Fast Walsh-Hadamard Transform (FWHT) rotation followed by 3-bit Lloyd-Max quantization with centroids tuned to N(0,1). We evaluate across two model scales (SmolLM2-1.7B-Instruct and Llama-3-8B-Instruct), three context lengths (600-7,194 tokens), and up to 15 concurrent agents. PolyKV achieves a stable 2.91x compression ratio across all configurations. On Llama-3-8B with 15 agents sharing a 4K-token context, PolyKV reduces KV cache memory from 19.8 GB to 0.45 GB -- a 97.7% reduction -- while maintaining only +0.57% perplexity degradation and a mean BERTScore F1 of 0.928. PPL delta does not grow with agent count and improves as context length increases, inverting to -0.26% at 1,851 coherent tokens. To our knowledge, no prior work combines a single shared, lossy-compressed KV pool with multi-reader concurrent agent access.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-27T20:10:21Z</published>
+    <arxiv:comment>10 pages, 6 tables. Code: https://github.com/ishan1410/PolyKV Keywords: KV cache compression, multi-agent LLM inference, asymmetric quantization, FWHT, TurboQuant, shared memory</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ishan Patel</name>
+    </author>
+    <author>
+      <name>Ishan Joshi</name>
+    </author>
+    <arxiv:doi>10.5281/zenodo.19686729</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.5281/zenodo.19686729" title="doi"/>
+  </entry>
+</feed>

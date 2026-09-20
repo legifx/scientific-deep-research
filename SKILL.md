@@ -23,6 +23,27 @@ only relay what `search.py` returned.
 All scripts are stdlib-only Python 3.8+. Run them from this skill's
 directory (`SKILL_DIR` below means the folder containing this file).
 
+## Hard rules (not optional)
+
+1. **Score is not evidence of relevance.** `score` weights citations,
+   freshness and venue. A high score does not mean the document matches the
+   topic — read the `relevance` field for that.
+
+2. **Cite only documents that have a `local_path`.** Entries with
+   `status: "link_only"` or `"pdf_unverified"` may be mentioned as a hint,
+   but never cited as a read source.
+
+3. **When `search.py` returns `aborted: true`, write no library.** Report
+   the reason and the `query_suggestions` to the user and re-run with a
+   narrower query.
+
+4. **Surface every `conflict: true`.** A document whose sources disagree
+   must not be used as evidence silently; name the rejected source. Both
+   variants are kept in `manifest.json` under `conflict_detail`.
+
+5. **Below a mean relevance of 0.5 in `manifest.json` → write no literature
+   review.** Narrow the query and search again.
+
 ## Phase 0 — Intake (ONE question round)
 
 Parse the user's request: topic, and optionally `--effort <level>`,
@@ -119,10 +140,15 @@ as README-only. NEVER extract or retype paper content yourself — only the
 script's verbatim extraction keeps the anti-hallucination guarantee.
 Volume guides shrink accordingly (light rarely exceeds a few MB).
 
-Volume is enforced cumulatively across all fetch calls. HF models/datasets
-are recorded as links only (weights are huge). Failed downloads are fine —
-they stay in the index as link-only entries via search results you re-add
-with `--ids`.
+Volume is enforced cumulatively across all fetch calls, measured in
+allocated disk blocks. Oversized items are skipped **before** they are
+transferred, and the loop stops at the first item that exceeds the budget.
+HF models/datasets are recorded as links only (weights are huge).
+
+Failed downloads no longer disappear: the document is still written to the
+manifest with `status: "link_only"` and a `failure_reason` (e.g. `http_403`).
+Do not try to rescue these with `--ids` — the same URL will fail again.
+Mention them as a hint, never cite them as read sources (hard rule 2).
 
 ## Phase 4 — Manifest (the anti-hallucination layer)
 

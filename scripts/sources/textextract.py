@@ -110,6 +110,50 @@ def from_pdf_url(pdf_url: str) -> str | None:
         tmp_path.unlink(missing_ok=True)
 
 
+# C12: a PDF is marked unverified when this share of the title's tokens is
+# missing from its first two pages (Jev: below 0.70, conf. 0.73).
+VERIFY_THRESHOLD = 0.70
+
+
+def verify_pdf_against_title(data: bytes, title: str):
+    """C12: does this PDF belong to the record it is filed under?
+
+    One-sided token coverage — the share of the title's tokens that appear
+    in the first two pages. Coverage rather than Jaccard, because a short
+    title against two pages of body text is hopelessly length-asymmetric:
+    a perfect match would score about 0.01 Jaccard (Jev: 0.90, conf. 0.87).
+
+    Returns a float, or None when it cannot be checked, which is never
+    treated as a failure.
+    """
+    if not shutil.which("pdftotext") or not data.startswith(b"%PDF"):
+        return None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+            tmp.write(data)
+            tmp_path = Path(tmp.name)
+        try:
+            r = subprocess.run(
+                ["pdftotext", "-f", "1", "-l", "2", "-enc", "UTF-8",
+                 str(tmp_path), "-"],
+                capture_output=True, timeout=120,
+            )
+            if r.returncode != 0:
+                return None
+            text = r.stdout.decode("utf-8", "replace")
+        finally:
+            tmp_path.unlink(missing_ok=True)
+    except Exception:
+        return None
+    if len(text.strip()) < 200:
+        return None
+    want = common.tokens(title)
+    if not want:
+        return None
+    have = common.tokens(text)
+    return round(len(want & have) / len(want), 4)
+
+
 def extract(item: dict) -> tuple[str, str]:
     """Return (text, method). Always succeeds — worst case abstract-only."""
     if item["id"].startswith("arxiv:"):

@@ -68,10 +68,25 @@ def search(query: str, max_results: int = 15, since: str | None = None) -> list[
     return [_to_item(w) for w in data.get("results", [])]
 
 
-def cited_by(openalex_id: str, max_results: int = 25) -> list[dict]:
-    """Works that cite the given work — 'who built on this?' (expansion)."""
+def _date_filter(since: str | None) -> str | None:
+    if not since:
+        return None
+    return f"from_publication_date:{since if len(since) > 4 else since + '-01-01'}"
+
+
+def cited_by(openalex_id: str, max_results: int = 25, since: str | None = None) -> list[dict]:
+    """Works that cite the given work — 'who built on this?' (expansion).
+
+    OpenAlex filter names run against intuition: `cites:X` returns works that
+    cite X (newer works); `cited_by:X` returns the works X cites (its
+    bibliography). Verified against the live API.
+    """
+    filters = [f"cites:{openalex_id}"]
+    d = _date_filter(since)
+    if d:
+        filters.append(d)
     url = f"{API}?" + common.qs({
-        "filter": f"cites:{openalex_id}",
+        "filter": ",".join(filters),
         "per-page": min(max_results, 100),
         "sort": "cited_by_count:desc",
         "select": _FIELDS,
@@ -79,10 +94,14 @@ def cited_by(openalex_id: str, max_results: int = 25) -> list[dict]:
     return [_to_item(w) for w in common.get_json(url).get("results", [])]
 
 
-def references(openalex_id: str, max_results: int = 25) -> list[dict]:
+def references(openalex_id: str, max_results: int = 25, since: str | None = None) -> list[dict]:
     """Works the given work cites — its bibliography (xhigh/ultra expansion)."""
+    filters = [f"cited_by:{openalex_id}"]
+    d = _date_filter(since)
+    if d:
+        filters.append(d)
     url = f"{API}?" + common.qs({
-        "filter": f"cited_by:{openalex_id}",
+        "filter": ",".join(filters),
         "per-page": min(max_results, 100),
         "sort": "cited_by_count:desc",
         "select": _FIELDS,
